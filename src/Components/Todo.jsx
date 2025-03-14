@@ -3,15 +3,13 @@ import "./Todo.css"
 
 const Todo = () => {
 
-    const [todos, setTodos] = useState([
-        {heading: "Mercado", listInputs: []},
-        {heading: "Backlog", listInputs: []},  
-    ]); //LISTAS
+    const [todos, setTodos] = useState([]); //LISTAS
+    
     const [headingInput, setHeadingInput] = useState(''); // TITULO
     const [listInputs, setListInputs] = useState({}); //ITENS DAS LISTAS
 
+    //Adição da lista
     const handleAddTodo = () => {
-        console.log(todos);
         if(headingInput.trim() !== ''){
             setTodos([
                 ...todos,
@@ -19,9 +17,14 @@ const Todo = () => {
                 ]);
             setHeadingInput('');
         }
-        console.log(todos);
     };
 
+    //Adiciona o nome do item a lista a que pertence
+    const handleListInputChange = (index, value) => {
+        setListInputs({...listInputs, [index]: value})
+    }
+
+    //Adiciona o item a lista de itens do state todos
     const handleAddList = (index) => {
         if (listInputs[index] && listInputs[index].trim() !== ''){
             const newTodos = [...todos];
@@ -31,8 +34,10 @@ const Todo = () => {
         }
     };
 
-    const handleListInputChange = (index, value) => {
-        setListInputs({...listInputs, [index]: value})
+    const handleDeleteTodo = (index) => {
+        const newTodos = [...todos];
+        newTodos.splice(index, 1);
+        setTodos(newTodos);
     }
 
     return (
@@ -56,13 +61,21 @@ const Todo = () => {
                 <div className='todo_main'>
                     {todos.map((todo, index) => (
                         <div key={index} className="todo-card">
-
                             <div className="heading_todo">
                                 <h3>{todo.heading}</h3> {/* Título da minha lista*/}
-                                <button className="delete-button-heading">
+                                <button className="delete-button-heading" onClick={() => handleDeleteTodo(index)}>
                                     [x] List
                                 </button>
                             </div>
+
+                            <ul>
+                                {
+                                 todo.listInputs.map((item, itemIndex) => (
+                                    <li key={itemIndex} className='todo_inside_list'>
+                                        <p>{item}</p>
+                                    </li>
+                                ))}
+                            </ul>
 
                             <div className="add_list">
                                 <input
